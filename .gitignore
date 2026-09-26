@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+*.egg-info/
+.venv/
+venv/
+
+# Pipeline data products (fetched/generated, not source)
+xrb_outbursts.json
+*.csv
+!data/**/*.csv
+*.png
+!docs/**/*.png
+data/*
+!data/.gitkeep

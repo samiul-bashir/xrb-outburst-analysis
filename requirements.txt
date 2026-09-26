@@ -1,0 +1,11 @@
+numpy
+scipy
+pandas
+matplotlib
+plotly
+requests
+astropy
+astroquery
+alerce
+nbformat
+jupyter
