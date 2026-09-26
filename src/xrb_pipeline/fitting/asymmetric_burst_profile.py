@@ -3,7 +3,7 @@ Asymmetric burst-profile fitting -- an alternative to the FRED family.
 
 Independent rise/decay amplitudes plus a free background level, adapted
 from a LAXPC Type-I X-ray burst fitting prototype (see
-docs/legacy_burst_lc_fitting.md) and applied here to MAXI outburst
+docs/legacy_notebooks.md) and applied here to MAXI outburst
 peaks. Not part of the KSP-07 report's final results, but kept as a
 documented alternative model -- useful when a source's rise and decay
 have genuinely different characteristic amplitudes rather than sharing

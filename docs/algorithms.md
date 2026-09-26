@@ -6,6 +6,14 @@ background and results; this document is a code-facing companion.
 
 ## 1. Cross-matching (`src/xrb_pipeline/crossmatch/`)
 
+**`maxi_simbad_prefilter.py`** -- true Step 1: downloads MAXI's all-sky
+*source list* (an HTML table at `maxi.riken.jp/sourcelist.html`, not a
+single source's light curve), cone-searches SIMBAD (2 arcmin) around
+every position, and keeps sources typed `XB`/`LXB`/`HXB`. Includes a
+manual-corrections hook, since SIMBAD sometimes types a known XRB as
+generic `'X'` or hasn't yet classified a brand-new transient. Output:
+`step1_maxi_xrb_sources.csv`.
+
 **`bat_maxi_simbad_ztf.py`** -- narrow, high-confidence sample. Four
 sequential steps, each gated on the previous:
 
@@ -21,7 +29,8 @@ sequential steps, each gated on the previous:
 4. **XRB-type filter**: keep only `otype` in `{LXB, HXB}` with a ZTF
    match.
 
-**`classify_compact_objects.py`** -- broader MAXI-wide classification
+**`classify_compact_objects.py`** -- reads `step1_maxi_xrb_sources.csv`
+(above) and classifies each source as BH/NS and persistent/transient
 (this is what feeds the outburst catalogue). Priority order:
 
 1. **BlackCAT name/position match -> BH.**
@@ -100,7 +109,7 @@ needed different trade-offs:
   with a sustained maximum rather than a sharp spike.
 - **`asymmetric_burst_profile`**: independent rise/decay amplitudes
   plus a free background level, adapted from a LAXPC Type-I burst
-  prototype (see `docs/legacy_burst_lc_fitting.md`). Not in the KSP-07
+  prototype (see `docs/legacy_notebooks.md`). Not in the KSP-07
   report's final results, kept as a documented alternative.
 - **`norris_fred`**: the smooth (no-kink) mentor's-formulation FRED
   used throughout Phases 0-5 (report 8). `t_start`/`t_rise`/`t_decay`
@@ -119,18 +128,28 @@ model, and that's expected (see
 `docs/methodology-decisions` if present in your memory notes, or the
 report's Section 5 discussion).
 
-## 5. Hardness (`src/xrb_pipeline/hardness/hid.py`)
+## 5. Hardness (`src/xrb_pipeline/hardness/`)
 
-X-ray hardness = flux(4-10 keV) / flux(2-4 keV); intensity =
-flux_total (2-20 keV). The Hardness-Intensity Diagram traces spectral
-state transitions through an outburst as a loop rather than two
-independent time series. The optical analogue uses a "color" (flux
-difference between two ZTF bands, converted from AB magnitude) instead
-of a ratio, since ZTF reports magnitudes rather than physical flux
-ratios; bands aren't observed simultaneously, so points are first
-nightly-binned per band, then matched by night. The g-r pair is
-preferred (best cadence); r-i is the fallback when g is too sparse in a
-given window.
+**`hid.py`** -- per-outburst, X-ray + optical. X-ray hardness =
+flux(4-10 keV) / flux(2-4 keV); intensity = flux_total (2-20 keV). The
+Hardness-Intensity Diagram traces spectral state transitions through
+an outburst as a loop rather than two independent time series. The
+optical analogue uses a "color" (flux difference between two ZTF
+bands, converted from AB magnitude) instead of a ratio, since ZTF
+reports magnitudes rather than physical flux ratios; bands aren't
+observed simultaneously, so points are first nightly-binned per band,
+then matched by night. The g-r pair is preferred (best cadence); r-i
+is the fallback when g is too sparse in a given window.
+
+**`population_hid.py`** -- whole-catalogue, X-ray only. Complementary
+to `hid.py`: instead of one outburst at a time, this fetches every
+BH/NS source's light curve once, computes HR for all of them, and
+overlays every outburst's HID track on one combined plot (opacity
+encodes time, arrows show direction) plus per-source HR-vs-time
+diagnostic plots with the NS quiescent-HR veto line drawn in for
+reference. Useful for spotting population-level patterns (e.g. BH
+tracks sweeping right-to-left/hard-to-soft) that a single-outburst view
+can't show.
 
 ## 6. Reprocessing (`src/xrb_pipeline/reprocessing/`)
 

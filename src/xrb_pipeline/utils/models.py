@@ -12,7 +12,7 @@ serves a different stage of the analysis (see docs/algorithms.md):
 - ``asymmetric_burst_profile`` : independent rise/decay amplitudes plus a
                          free background level; adapted from a LAXPC
                          Type-I burst fitting prototype (see
-                         docs/legacy_burst_lc_fitting.md).
+                         docs/legacy_notebooks.md).
 - ``norris_fred``      : the smooth (no-kink) Norris-style FRED used
                          throughout the manual inspector / reprocessing
                          phases (report section 8), where ``amplitude`` is

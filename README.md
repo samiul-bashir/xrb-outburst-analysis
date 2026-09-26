@@ -40,11 +40,11 @@ chapters:
 
 | Module | Report section | What's in it |
 |---|---|---|
-| `crossmatch/` | 3.1, 3.2 | BAT-MAXI-SIMBAD-ZTF matching; BH/NS + persistent/transient classification |
+| `crossmatch/` | 3.1, 3.2 | MAXI-SIMBAD prefilter (true step 1); BAT-MAXI-SIMBAD-ZTF matching; BH/NS + persistent/transient classification |
 | `detection/` | 4.1, 4.2 | Simple threshold detector; class-routed tiered detector |
 | `fitting/` | 5.1, 5.2 | Pure FRED, FRED+tophat, asymmetric burst profile, multi-FRED (bonus) |
 | `duration_stats/` | 6 | T90, T_rise, T_decay |
-| `hardness/` | 7 | X-ray and optical Hardness-Intensity Diagrams |
+| `hardness/` | 7 | Per-outburst X-ray+optical HID; whole-catalogue population HID |
 | `reprocessing/` | 8 | Manual inspector (FRED fit + hard-state calibration), optical simulation, free-beta fitting |
 | `utils/` | -- | Shared MAXI/ZTF fetch, outburst-profile models, JSON database helpers |
 
@@ -69,14 +69,19 @@ Each pipeline stage can be run as a script or imported as a library.
 
 ```bash
 # 1. Cross-match and classify
-python -m xrb_pipeline.crossmatch.bat_maxi_simbad_ztf --bat-fits BAT_catalog.fits --outdir data/crossmatch
+python -m xrb_pipeline.crossmatch.maxi_simbad_prefilter --output step1_maxi_xrb_sources.csv
 python -m xrb_pipeline.crossmatch.classify_compact_objects --input step1_maxi_xrb_sources.csv
+python -m xrb_pipeline.crossmatch.bat_maxi_simbad_ztf --bat-fits BAT_catalog.fits --outdir data/crossmatch
 
 # 2. Detect outbursts
 python -m xrb_pipeline.detection.tiered_detector --input step1b_maxi_xrb_classified.csv
 
 # 3. Duration statistics
 python -m xrb_pipeline.duration_stats.duration_metrics --outbursts step2_outbursts.csv --classified step1b_maxi_xrb_classified.csv
+
+# 4. Population-level hardness (needs step4_master_catalogue.csv -- duration stats output
+#    merged with detection's compact_object/source_type columns)
+python -m xrb_pipeline.hardness.population_hid --master step4_master_catalogue.csv
 ```
 
 For interactive, per-source work (manual outburst inspection, FRED
@@ -106,11 +111,6 @@ This repo ships no data. You'll need:
   are all queried live over HTTP; no local copies needed beyond the
   BAT FITS file. Be considerate of the MAXI server (the crossmatch
   script already rate-limits itself).
-- The MAXI-wide classification pipeline (`classify_compact_objects.py`)
-  expects `step1_maxi_xrb_sources.csv`, an upstream SIMBAD-otype
-  pre-filter over the full MAXI GSC source list. That pre-filter step
-  isn't included here; regenerate it by querying SIMBAD for every MAXI
-  GSC source position and keeping `otype in {LXB, HXB}`.
 
 The persistent per-outburst database (`xrb_outbursts.json`) is built
 and grown by the notebooks in `notebooks/` as you inspect and fit
