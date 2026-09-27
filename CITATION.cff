@@ -1,0 +1,31 @@
+cff-version: 1.2.0
+message: "If you use this software or the accompanying report, please cite both as below."
+title: "Multiwavelength Analysis of X-ray Binary Outbursts"
+type: software
+version: 1.0.0
+date-released: "2026-09-27"
+repository-code: "https://github.com/samiul-bashir/xrb-outburst-analysis"
+license: MIT
+authors:
+  - family-names: Bashir
+    given-names: Samiu
+    affiliation: "IISER Bhopal"
+  - family-names: Salgundi
+    given-names: Anirudh
+    affiliation: "University of North Carolina at Chapel Hill"
+keywords:
+  - astrophysics
+  - x-ray-binaries
+  - accretion
+  - time-domain-astronomy
+  - MAXI
+  - ZTF
+preferred-citation:
+  type: report
+  title: "Multiwavelength Analysis of X-ray Binary Outbursts"
+  authors:
+    - family-names: Bashir
+      given-names: Samiu
+      affiliation: "IISER Bhopal"
+  notes: "KSP-07, Summer 2026. Mentored by Anirudh Salgundi (University of North Carolina at Chapel Hill)."
+  year: 2026
