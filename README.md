@@ -1,4 +1,9 @@
-<div align="center">
+<p align="center">
+  <img src="banner.png"
+       alt="X-ray Binary Outburst Analysis"
+       width="100%">
+</p>
+
 
 <!--
   Hero banner goes here. Suggested dimensions: 1200x400px (3:1), dark-navy
