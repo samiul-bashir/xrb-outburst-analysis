@@ -3,7 +3,7 @@
        alt="X-ray Binary Outburst Analysis"
        width="100%">
 </p>
-
+<div align="center">
 
 <!--
   Hero banner goes here. Suggested dimensions: 1200x400px (3:1), dark-navy
